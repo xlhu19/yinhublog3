@@ -8,9 +8,12 @@ from flaskr.db import *
 import markdown
 from flask import Markup
 import uuid
+import time
+import operator
 
 bp = Blueprint('blog', __name__)
 
+visitor = []
 #####################
 # The index page
 #####################
@@ -48,6 +51,18 @@ def get_post_by_uuid(uuid):
   ))
 
   ip = request.remote_addr
+  dtime = time.strftime("%Y-%m-%d-%H")
+  c = {'uuid':uuid, 'ip':ip, 'time':dtime}
+  new = True
+  for d in visitor:
+    if operator.eq(d, c):
+      new = False
+      break
+  if new == True:
+    visitor.append(c)
+    if (len(visitor) > 100):
+      visitor.pop(0)
+    update_db_read_cnt({'uuid':uuid, 'read_cnt':p['read_cnt']+1})
 
   return render_template('blog/blog.html', post=pp)
 

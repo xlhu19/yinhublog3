@@ -39,6 +39,16 @@ def update_db(info, cmd):
 
   db.commit()
 
+def update_db_read_cnt(info):
+  db = get_db()
+  db.execute(
+      'UPDATE post SET read_cnt = ? WHERE uuid = ?',
+      (info['read_cnt'],
+       info['uuid'],)
+  )
+  db.commit()
+
+
 def close_db(e=None):
   """If this request connected to the database, close the
   connection.
