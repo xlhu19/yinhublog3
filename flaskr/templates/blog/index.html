@@ -13,7 +13,7 @@
       <header>
         <div>
           <a class="action" href="{{ url_for('blog.get_post_by_uuid', uuid=post['uuid']) }}">{{ post['title'] }}</a>
-          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+          <div class="about">更新于 {{ post['updated'].strftime('%Y-%m-%d') }}</div>
         </div>
       </header>
     </article>

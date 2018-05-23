@@ -18,9 +18,9 @@ bp = Blueprint('blog', __name__)
 def index():
   db = get_db()
   posts = db.execute(
-    'SELECT p.uuid, title, body, created, author_id, username, tags'
+    'SELECT p.uuid, title, body, created, updated, author_id, username, tags'
     ' FROM post p JOIN user u ON p.author_id = u.id'
-    ' ORDER BY created DESC'
+    ' ORDER BY updated DESC'
   ).fetchall()
 
   return render_template('blog/index.html', posts=posts)
@@ -69,7 +69,7 @@ def get_post(uuid, check_author=True):
 @login_required
 def create():
   if request.method == 'POST':
-    uuid = uuid.uuid1()
+    new_uuid = str(uuid.uuid1())
     title = request.form['title']
     body = request.form['body']
     tags = ""
@@ -81,12 +81,12 @@ def create():
     if error is not None:
       flash(error)
     else:
-      update_db({'uuid':uuid,
+      update_db({'uuid':new_uuid,
                  'title':title,
                  'body':body,
                  'tags':tags,
                  'author_id':g.user['id'],}, "insert")
-      return redirect(url_for('blog.index'))
+      return redirect(url_for('blog.get_post_by_uuid', uuid=new_uuid))
 
   return render_template('blog/create.html')
 
@@ -105,18 +105,18 @@ def update(uuid):
         error = None
 
         if not title:
-            error = 'Title is required.'
+          error = 'Title is required.'
 
         if error is not None:
-            flash(error)
+          flash(error)
         else:
-            update_db({'title':title,
-                       'body':body,
-                       'author_id':g.user['id'],
-                       'tags':tags,
-                       'uuid':uuid}, "update")
+          update_db({'title':title,
+                     'body':body,
+                     'author_id':g.user['id'],
+                     'tags':tags,
+                     'uuid':uuid}, "update")
 
-            return redirect(url_for('blog.index'))
+          return redirect(url_for('blog.get_post_by_uuid', uuid=uuid))
 
     return render_template('blog/update.html', post=post)
 

@@ -132,3 +132,8 @@ input[type=submit] {
   align-self: start;
   min-width: 10em;
 }
+
+.codehilite {
+  background-color: #F0F0F0;
+}
+

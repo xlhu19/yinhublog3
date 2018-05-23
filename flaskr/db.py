@@ -18,9 +18,10 @@ def update_db(info, cmd):
 
   if cmd == "insert":
     db.execute(
-      'INSERT INTO post (title, body, author_id, tags)'
-      ' VALUES (?, ?, ?, ?)',
-      (info['title'],
+      'INSERT INTO post (uuid, title, body, author_id, tags)'
+      ' VALUES (?, ?, ?, ?, ?)',
+      (info['uuid'],
+       info['title'],
        info['body'],
        g.user['id'],
        info['tags'],)
@@ -28,7 +29,7 @@ def update_db(info, cmd):
 
   if cmd == "update":
     db.execute(
-      'UPDATE post SET title = ?, body = ?, author_id = ?, tags = ? WHERE uuid = ?',
+      'UPDATE post SET title = ?, body = ?, author_id = ?, updated=datetime("now", "localtime"), tags = ? WHERE uuid = ?',
       (info['title'],
        info['body'],
        info['author_id'],
