@@ -47,11 +47,13 @@ def get_post_by_uuid(uuid):
       'markdown.extensions.tables']
   ))
 
+  ip = request.remote_addr
+
   return render_template('blog/blog.html', post=pp)
 
 def get_post(uuid, check_author=True):
     post = get_db().execute(
-        'SELECT p.uuid, title, body, created, author_id, username'
+        'SELECT p.uuid, title, body, created, updated, author_id, username, read_cnt, good_cnt'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.uuid = ?',
         (uuid,)
