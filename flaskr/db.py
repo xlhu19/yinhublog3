@@ -2,6 +2,21 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
+from flask_sqlalchemy import SQLAlchemy
+
+# dbs = SQLAlchemy(current_app)
+global dbs
+
+"""
+class User(dbs.Model):
+  __tablename__ = 'user'
+  id = dbs.Column(dbs.Integer, primary_key=True)
+  username = dbs.Column(dbs.String(64), unique=True)
+  password = dbs.Column(dbs.String(64))
+
+  def __repr__(self):
+    return '<User %r>' % self.username
+"""
 
 def get_db():
   if 'db' not in g:
@@ -79,5 +94,7 @@ def init_app(app):
     """Register database functions with the Flask app. This is called by
     the application factory.
     """
+    dbs = SQLAlchemy(app)
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+

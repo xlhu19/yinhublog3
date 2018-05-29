@@ -10,6 +10,7 @@ from flask import Markup
 import uuid
 import time
 import operator
+# from flaskr.db_model import User, Post
 
 bp = Blueprint('blog', __name__)
 
@@ -25,6 +26,8 @@ def index():
     ' FROM post p JOIN user u ON p.author_id = u.id'
     ' ORDER BY updated DESC'
   ).fetchall()
+
+  # User.query.all()
 
   return render_template('blog/index.html', posts=posts)
 
