@@ -136,5 +136,37 @@ input[type=submit] {
 
 .codehilite {
   background-color: #F0F0F0;
+  padding: 8px;
+}
+
+#index_tags {
+  color: black;
+  font-weight: bold;
+  width:100%;
+  float:left;
+}
+
+.index_item {
+  float:left;
+  height:30px;
+}
+
+#index_title {
+  margin-left:5%;
+  width:55%;
+}
+
+#index_read_cnt {
+  width:10%;
+}
+
+#index_update {
+  width:30%;
+}
+
+#base_foot {
+  margin-top: 10px;
+  text-align:center;  
+  margin-bottom: 10px;
 }
 

@@ -22,14 +22,23 @@ visitor = []
 def index():
   db = get_db()
   posts = db.execute(
-    'SELECT p.uuid, title, body, created, updated, author_id, username, tags'
+    'SELECT p.uuid, title, body, created, updated, author_id, username, tags, read_cnt, good_cnt'
     ' FROM post p JOIN user u ON p.author_id = u.id'
-    ' ORDER BY updated DESC'
+    ' ORDER BY tags'
   ).fetchall()
 
-  # User.query.all()
+  posts_n = []
+  pre_tag = ''
+  for p in posts:
+    n = {}
+    for key in p.keys():
+      n[key] = p[key]
+    if p['tags'] == pre_tag:
+      n['tags'] = ''
+    posts_n.append(n)
+    pre_tag = p['tags']
 
-  return render_template('blog/index.html', posts=posts)
+  return render_template('blog/index.html', posts=posts_n)
 
 @bp.route('/<uuid>')
 def get_post_by_uuid(uuid):
@@ -71,7 +80,7 @@ def get_post_by_uuid(uuid):
 
 def get_post(uuid, check_author=True):
     post = get_db().execute(
-        'SELECT p.uuid, title, body, created, updated, author_id, username, read_cnt, good_cnt'
+        'SELECT p.uuid, title, body, created, updated, author_id, username, read_cnt, good_cnt, tags'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.uuid = ?',
         (uuid,)
@@ -120,7 +129,7 @@ def update(uuid):
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        tags = ""
+        tags = request.form['tags']
 
         error = None
 

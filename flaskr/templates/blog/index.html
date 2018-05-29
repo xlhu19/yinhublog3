@@ -9,13 +9,13 @@
 
 {% block content %}
   {% for post in posts %}
-    <article class="post">
-      <header>
-        <div>
-          <a class="action" href="{{ url_for('blog.get_post_by_uuid', uuid=post['uuid']) }}">{{ post['title'] }}</a>
-          <div class="about">更新于 {{ post['updated'].strftime('%Y-%m-%d') }}</div>
-        </div>
-      </header>
+    <article>
+        {% if post['tags'] %}
+        <div id='index_tags'>{{ post['tags'] }}</div>
+        {% endif %}
+        <div class='index_item' id='index_title'><a class="action" href="{{ url_for('blog.get_post_by_uuid', uuid=post['uuid']) }}">{{ post['title'] }}</a></div>
+        <div class='index_item' id='index_read_cnt'>{{ post['read_cnt'] }}</div>
+        <div class='index_item' id='index_update'>更新于 {{ post['updated'].strftime('%Y-%m-%d') }}</div>
     </article>
     {% if not loop.last %}
       <hr>
