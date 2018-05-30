@@ -15,6 +15,7 @@ import operator
 bp = Blueprint('blog', __name__)
 
 visitor = []
+
 #####################
 # The index page
 #####################
@@ -35,8 +36,10 @@ def index():
       n[key] = p[key]
     if p['tags'] == pre_tag:
       n['tags'] = ''
-    posts_n.append(n)
     pre_tag = p['tags']
+
+    n['tags'] = n['tags'].strip('/').replace('/', ' -> ')
+    posts_n.append(n)
 
   return render_template('blog/index.html', posts=posts_n)
 
