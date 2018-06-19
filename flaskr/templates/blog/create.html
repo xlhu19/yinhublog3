@@ -12,6 +12,8 @@
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
     <label for="tags">Tags</label>
     <input name="tags" id="tags" value="{{ request.form['tags'] }}">
+    <label for="tags_index">Tags Index</label>
+    <input name="tags_index" id="tags_index" value="{{ request.form['tags_index'] }}">
     <input type="submit" value="Save">
   </form>
 {% endblock %}

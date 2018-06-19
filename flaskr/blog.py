@@ -23,9 +23,9 @@ visitor = []
 def index():
   db = get_db()
   posts = db.execute(
-    'SELECT p.uuid, title, body, created, updated, author_id, username, tags, read_cnt, good_cnt'
+    'SELECT p.uuid, title, body, created, updated, author_id, username, tags,tags_index, read_cnt, good_cnt'
     ' FROM post p JOIN user u ON p.author_id = u.id'
-    ' ORDER BY tags'
+    ' ORDER BY tags,tags_index DESC'
   ).fetchall()
 
   posts_n = []
@@ -83,7 +83,7 @@ def get_post_by_uuid(uuid):
 
 def get_post(uuid, check_author=True):
     post = get_db().execute(
-        'SELECT p.uuid, title, body, created, updated, author_id, username, read_cnt, good_cnt, tags'
+        'SELECT p.uuid, title, body, created, updated, author_id, username, read_cnt, good_cnt, tags, tags_index'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.uuid = ?',
         (uuid,)
@@ -104,7 +104,8 @@ def create():
     new_uuid = str(uuid.uuid1())
     title = request.form['title']
     body = request.form['body']
-    tags = ""
+    tags = request.form['tags']
+    tags_index = request.form['tags_index']
     error = None
 
     if not title:
@@ -117,6 +118,7 @@ def create():
                  'title':title,
                  'body':body,
                  'tags':tags,
+                 'tags_index':tags_index,
                  'author_id':g.user['id'],}, "insert")
       return redirect(url_for('blog.get_post_by_uuid', uuid=new_uuid))
 
@@ -133,6 +135,7 @@ def update(uuid):
         title = request.form['title']
         body = request.form['body']
         tags = request.form['tags']
+        tags_index = request.form['tags_index']
 
         error = None
 
@@ -146,6 +149,7 @@ def update(uuid):
                      'body':body,
                      'author_id':g.user['id'],
                      'tags':tags,
+                     'tags_index':tags_index,
                      'uuid':uuid}, "update")
 
           return redirect(url_for('blog.get_post_by_uuid', uuid=uuid))
