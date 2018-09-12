@@ -9,3 +9,29 @@ export FLASK_DEBUG=1
 flask init-db
 flask run -h 0 -p 9001
 
+
+# each article is one record in table post3
+# only use markdown, no picture
+# every article is accurate and future-proof, maintain each article carefully
+# database
+# url format is http://www.yinhu.tech/<uuid>
+sqlite> CREATE TABLE post3 (
+   ...>   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...>   uuid TEXT NOT NULL DEFAULT "",
+   ...>   author_id INTEGER NOT NULL,
+   ...>
+   ...>   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   ...>   updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   ...>
+   ...>   title TEXT NOT NULL,
+   ...>   body TEXT NOT NULL,
+   ...>   tags TEXT NOT NULL DEFAULT "",
+   ...>   tags_index INTEGER NOT NULL DEFAULT 0,
+   ...>
+   ...>   read_cnt INTEGER NOT NULL DEFAULT 0,
+   ...>   good_cnt INTEGER NOT NULL DEFAULT 0,
+   ...>
+   ...>   FOREIGN KEY (author_id) REFERENCES user (id)
+   ...> );
+
+

@@ -2,7 +2,7 @@
 
 {% block title %}<title>{{ post['title'] }}</title>{% endblock %}
 {% block header %}
-  <h1>自强不息，止于至善</h1>
+  <h1 id="blog_h1">自强不息，止于至善</h1>
   {% if g.user %}
     <a class="action" href="{{ url_for('blog.create') }}">New</a>
   {% endif %}

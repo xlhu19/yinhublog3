@@ -10,11 +10,16 @@ from flask import Markup
 import uuid
 import time
 import operator
+import re
 # from flaskr.db_model import User, Post
 
 bp = Blueprint('blog', __name__)
 
 visitor = []
+
+@bp.route('/jingdian')
+def jingdian():
+  return render_template('jingdian/index.html')
 
 #####################
 # The index page
@@ -43,12 +48,32 @@ def index():
 
   return render_template('blog/index.html', posts=posts_n)
 
+def generate_body_index(body):
+  inx_1 = re.compile("^#\s[0-9]{1,2}")
+  inx_2 = re.compile("^##\s[0-9]{1,2}\.[0-9]{1,2}")
+  inx_3 = re.compile("^###\s[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}")
+  body_with_index = body
+  index = ''
+  body_lines = body.split("\r\n")
+  for l in body_lines:
+    if inx_1.match(l):
+      index += '' 
+    elif inx_2.match(l):
+      index += '' 
+    elif inx_3.match(l):
+      index += '' 
+    else:
+      continue 
+  print(len(body_lines))
+  return body_with_index
+
 @bp.route('/<uuid>')
 def get_post_by_uuid(uuid):
   p = get_post(uuid, check_author=False)
   pp = {}
   for key in p.keys():
       pp[key] = p[key]
+  p_with_indx = generate_body_index(p['body'])
   pp['body'] = Markup(markdown.markdown(p['body'],
       output_format='html5',
       extensions=['markdown.extensions.toc',
@@ -65,6 +90,9 @@ def get_post_by_uuid(uuid):
       'markdown.extensions.tables']
   ))
 
+
+  # Check visit count
+  # The same ip within one hour is counted 1 visit
   ip = request.remote_addr
   dtime = time.strftime("%Y-%m-%d-%H")
   c = {'uuid':uuid, 'ip':ip, 'time':dtime}
